@@ -1,0 +1,45 @@
+{
+  "name": "ici-schema",
+  "description": "JSON Schema validation",
+  "version": "1.0.0",
+  "author": "huangmin",
+  "license": "ISC",
+  "private": false,
+  "main": "lib/Schema.class.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amwtxgt/js-schema.git"
+  },
+  "keywords": [
+    "ici"
+  ],
+  "bugs": {
+    "url": "https://github.com/amwtxgt/js-schema/issues"
+  },
+  "homepage": "https://github.com/amwtxgt/js-schema#readme",
+  "dependencies": {
+    "autoprefixer-loader": "^3.2.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-import": "^1.11.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "cross-env": "^5.2.0",
+    "file-loader": "^1.1.4",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
+  }
+}
