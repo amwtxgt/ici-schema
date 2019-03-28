@@ -27,7 +27,12 @@ export default class Enum extends Validate {
 		this._enums = enums;
 		this._validateType = {
 			validate: (value)=>{
-				return this._enums.some(v=>v===value);
+				if(this._required){
+					return this._enums.some(v=>v===value);
+				}else{
+					return !value || this._enums.some(v=>v===value);
+				}
+
 			},
 			errorMsg: errMsg && isString(errMsg) ? errMsg : `%s必须是[${this._enums}]中的一个`
 		};

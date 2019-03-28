@@ -8,11 +8,15 @@
 <body>
 <script>
     var a = new Schema({
-        abc:Schema.string().default('asdg')
+        abc:Schema.string().default('asdg'),
+        cde:Schema.enum([1,2])
     });
     console.log(a.model());
-    a.abc = 124
-    a.validate()
+    a.abc = '124'
+    a.cde = ''
+    a.validate().catch((e)=>{
+        console.log(e)
+    })
 </script>
 </body>
 </html>
