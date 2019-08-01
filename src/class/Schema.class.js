@@ -137,7 +137,7 @@ export default class Schema {
             data = new Proxy(origin, {
                 set(target,name,value){
                     target[name] = value
-                    target.validateField(target,name)
+                    target.validateField(target,name,true)
                     return true;
                 },
             });
@@ -164,7 +164,10 @@ export default class Schema {
     }
 
     //验证单个字段，不验证唯一性
-    validateField(data,key){
+    //@param {Object} data 原数据
+    //@param {String} key 键
+    //@param {Boolean} noFieldError 字段不存在报错
+    validateField(data,key,noFieldError){
 
         //必须在数据架构存在
         let errMsg;
@@ -274,7 +277,11 @@ export default class Schema {
             }
         }
         else {
-            isDev() && console.warn(`${key} 字段没有在schema里，跳过验证`)
+            if(noFieldError){
+                throw new CustomError(errorCode.validate_error, `${key} field does not exist in the schema`)
+            }
+            isDev() && console.warn(`${key} 字段没有在schema里，跳过验证`);
+
         }
         return true;
     }
