@@ -2,6 +2,7 @@
  * 是否是普通JavaScript对象。只返回boolean
  */
 let _toString = Object.prototype.toString;
+
 export function isObject(obj) {
     return _toString.call(obj) === '[object Object]'
 }
@@ -30,20 +31,21 @@ export function isNumber(v) {
 /*
 * 是否是整型
 * */
-export function isInteger(v){
-    return v === parseInt(v);
+export function isInteger(v) {
+    return v === parseInt(v) || v === parseInt(v).toString();
 }
+
 /*
 * 是否是正整型
 * */
-export function isPositiveInteger(v){
-    return isInteger(v) && v>=0
+export function isPositiveInteger(v) {
+    return isInteger(v) && v >= 0
 }
 
 /*
 * 是否是测试模式
 * 一般用于日志打印，测试模式输出日志， 生产模式不输出
 * */
-export function isDev(){
+export function isDev() {
     return process && process.env && process.env.NODE_ENV !== 'production';
 }

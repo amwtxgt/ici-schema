@@ -48,7 +48,7 @@ export default class NumberValidate extends Validate {
 	numberString() {
 		this._validateType.validate = function (v) {
 			if(typeof v === "string") {
-				v = parseFloat(v)
+				v = Number(v)
 			}
 			return isNumber(v)
 		}

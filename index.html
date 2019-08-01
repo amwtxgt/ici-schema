@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,16 +7,17 @@
 </head>
 <body>
 <script>
-    var a = new Schema({
-        abc:Schema.string().default('asdg'),
-        cde:Schema.enum([1,2])
+    let a = new Schema({
+        abc:Schema.string().default('a').addValidate((v)=>v==='abcdef','abc的值必须是abcdef'),
+        cde:Schema.enum([1,2]),
+        aaa:Schema.string().required(false,'cde')
     });
-    console.log(a.model());
-    a.abc = '124'
-    a.cde = ''
-    a.validate().catch((e)=>{
-        console.log(e)
-    })
+
+    let d = a.model(false,true);
+    d.abc = 'abcdef'
+    d.cde = 2
+    d.validate()
+    console.log(d)
 </script>
 </body>
 </html>

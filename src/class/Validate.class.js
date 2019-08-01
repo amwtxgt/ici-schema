@@ -16,10 +16,14 @@ export default class Validate {
 
 		this._validateList = [];
 	}
-
-	required(errMsg) {
+	/*
+	* @param {String} errMsg 错误说明
+	* @param {String/key} unlessField 排除字段，当这个字段不会空时，不需要唯一性
+	* */
+	required(errMsg,unlessField) {
 		this._required = {
-			errorMsg:errMsg && isString(errMsg)?errMsg:'%s是必填的'
+			errorMsg:errMsg && isString(errMsg)?errMsg:'%s是必填的',
+			unlessField,
 		};
 		return this
 	}
@@ -57,7 +61,13 @@ export default class Validate {
 		return this;
 	}
 
-
+	addValidate(validate,msg){
+		this._validateList.push({
+			validate: validate,
+			errorMsg: msg && isString(msg) ? msg : 'Fail verification'
+		});
+		return this;
+	}
 }
 
 

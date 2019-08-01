@@ -7,7 +7,7 @@ import errorCode from '../error.code'
 * 数组类
 *
 * */
-export default class Enum extends Validate {
+export default class EnumValidate extends Validate {
 	constructor(enums, errMsg) {
 
 		super();
