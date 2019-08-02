@@ -62,10 +62,12 @@ export default class Validate {
 	}
 
 	addValidate(validate,msg){
-		this._validateList.push({
-			validate: validate,
-			errorMsg: msg && isString(msg) ? msg : 'Fail verification'
-		});
+		if(typeof validate === "function"){
+			this._validateList.push({
+				validate: validate,
+				errorMsg: msg && isString(msg) ? msg : 'Fail verification'
+			});
+		}
 		return this;
 	}
 }
