@@ -190,7 +190,7 @@ export default class Schema {
             if(this.schema[key].type === 'object') {
                 if(this.schema[key]._schema) {
                     //如果是ojbect对象，自带schema验证
-                    this.schema[key]._schema.validate(data[key]);
+                    this.schema[key]._schema.validate(data[key],noFieldError);
                 }
             }
             else if(this.schema[key].type === 'array') {
@@ -205,10 +205,10 @@ export default class Schema {
                     for (let item of data[key]) {
 
                         if(isDefault) {
-                            this.schema[key]._schema.validate({$default: item});
+                            this.schema[key]._schema.validate({$default: item},noFieldError);
                         }
                         else {
-                            this.schema[key]._schema.validate(item);
+                            this.schema[key]._schema.validate(item,noFieldError);
                         }
                     }
                 }
@@ -278,7 +278,7 @@ export default class Schema {
         }
         else {
             if(noFieldError){
-                throw new CustomError(errorCode.validate_error, `${key} field does not exist in the schema`)
+                throw new CustomError(errorCode.validate_error, `"${key}" field does not exist in the schema`)
             }
             isDev() && console.warn(`${key} 字段没有在schema里，跳过验证`);
 
@@ -286,7 +286,7 @@ export default class Schema {
         return true;
     }
     //验证数据
-    validate(data) {
+    validate(data,noFieldError) {
         if(!data) data = this;
 
         if(!isObject(data)) {
@@ -308,7 +308,7 @@ export default class Schema {
 
             if(data[v] === null || data[v] === undefined) continue;
 
-            this.validateField(data,v)
+            this.validateField(data,v,noFieldError)
 
         }
 

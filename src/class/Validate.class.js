@@ -65,7 +65,7 @@ export default class Validate {
 		if(typeof validate === "function"){
 			this._validateList.push({
 				validate: validate,
-				errorMsg: msg && isString(msg) ? msg : 'Fail verification'
+				errorMsg: msg && isString(msg) ? msg : '%s Fail verification'
 			});
 		}
 		return this;

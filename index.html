@@ -8,14 +8,14 @@
 <body>
 <script>
     let a = new Schema({
-        abc:Schema.string().default('a').addValidate((v)=>v==='abcdef','abc的值必须是abcdef'),
-        cde:Schema.enum([1,2]),
+        abc:Schema.string().default('a'),
+        cde:Schema.array({abc:Schema.string()}),
         aaa:Schema.string().required(false,'cde')
     });
 
     let d = a.model(false,true);
     d.abc = 'abcdef'
-    d.cde = 2
+    d.cde = [{}]
     d.validate()
     console.log(d)
 </script>
