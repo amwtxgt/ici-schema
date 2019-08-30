@@ -8,13 +8,13 @@
 <body>
 <script>
     let a = new Schema({
-        abc:Schema.string().default('a'),
+        abc:Schema.number().integer(),
         cde:Schema.array({abc:Schema.string()}),
         aaa:Schema.string().required(false,'cde')
     });
 
     let d = a.model(false,true);
-    d.abc = 'abcdef'
+    d.abc = 0
     d.cde = [{}]
     d.validate()
     console.log(d)

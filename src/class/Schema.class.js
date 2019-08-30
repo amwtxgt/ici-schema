@@ -315,6 +315,11 @@ export default class Schema {
         return true;
     }
 
+    //转成干净的JSON对象
+    toJSON(data){
+        if(!data) data = this;
+        return JSON.parse(JSON.stringify(data))
+    }
 
     //异步验证数据
     async asyncValidate(data) {
