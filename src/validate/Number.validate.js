@@ -19,7 +19,7 @@ export default class NumberValidate extends Validate {
 		this._systemDefault = 0 //系统默认值
 		this._validateType = {
 			validate: isNumber,
-			errorMsg: str && isString(str) ? str : '%s is not a number'
+			errorMsg: str && isString(str) ? str : '%s is not a number, Current value: %v'
 		};
 	}
 
@@ -39,7 +39,8 @@ export default class NumberValidate extends Validate {
 
 		this._validateList.push({
 			validate: validate,
-			errorMsg: str && isString(str) ? str : positiveInteger ? '%s is not an integer' : '%s is not a positive integer'
+			errorMsg: str && isString(str) ? str : positiveInteger ? '%s is not an integer, Current value: %v' :
+                '%s is not a positive integer, Current value: %v'
 		});
 		return this
 	}

@@ -20,7 +20,7 @@ export default class MixinValidate extends Validate {
             validate: (v) => {
                 return true
             },
-            errorMsg: errMsg && isString(errMsg) ? errMsg : '%s'
+            errorMsg: errMsg && isString(errMsg) ? errMsg : '%s type is incorrect, Current value: %v'
         };
 
     }

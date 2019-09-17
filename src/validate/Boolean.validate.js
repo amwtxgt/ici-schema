@@ -18,7 +18,7 @@ export default class BooleanValidate extends Validate{
 		this._systemDefault = false //系统默认值
 		this._validateType = {
 			validate:isBoolean,
-			errorMsg:errMsg && isString(errMsg)?errMsg:'%s is not a Boolean'
+			errorMsg:errMsg && isString(errMsg)?errMsg:'%s is not a Boolean, Current value: %v'
 		};
 
 	}

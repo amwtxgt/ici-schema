@@ -28,7 +28,7 @@ export default class ObjectValidate extends Validate {
 
 		this._validateType = {
 			validate: isObject,
-			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s must be an object'
+			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s must be an object, Current value: %v'
 		};
 	}
 
@@ -39,7 +39,7 @@ export default class ObjectValidate extends Validate {
 			validate: (v) => {
 				return isObject(v) && Object.keys(v).length > 0
 			},
-			errorMsg: str && isString(str) ? str : '%s不能是空对象'
+			errorMsg: str && isString(str) ? str : '%s cannot be an empty object, Current value: %v'
 		};
 
 		this._validateList.push(obj)

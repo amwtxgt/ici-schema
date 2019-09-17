@@ -34,28 +34,17 @@ export default class Validate {
 	}
 
 	min(num,errMsg){
-
-		if(!isNumber(num)){
-			console.warn('参数不是数值型，min设置无效');
-			return this;
-		}
-
 		this._minlangth = {
 			number:num,
-			errorMsg:errMsg && isString(errMsg)?errMsg:`%s can't be less than "${num}"`
+			errorMsg:errMsg && isString(errMsg)?errMsg:`%s can't be less than "${num}", Current value: %v`
 		};
 		return this;
 	}
 
 	max(num,errMsg){
-		if(!isNumber(num)){
-			console.warn('参数不是数值型，min设置无效');
-			return this;
-		}
-
 		this._maxlangth = {
 			number:num,
-			errorMsg:errMsg && isString(errMsg)?errMsg:`%s can't be more than "${num}"`
+			errorMsg:errMsg && isString(errMsg)?errMsg:`%s can't be more than "${num}", Current value: %v`
 		};
 
 		return this;
@@ -65,7 +54,7 @@ export default class Validate {
 		if(typeof validate === "function"){
 			this._validateList.push({
 				validate: validate,
-				errorMsg: msg && isString(msg) ? msg : '%s fail verification'
+				errorMsg: msg && isString(msg) ? msg : '%s fail verification, Current value: %v'
 			});
 		}
 		return this;

@@ -170,9 +170,10 @@ export default class Schema {
 
                 //数组里不是一个对象时，会有$default
                 if (key === '$default') {
-                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${parentField}" `);
+                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${parentField}" `, data[key]);
                 } else {
-                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, parentField + key);
+                    console.log('aaaa',parentField + key, data[key])
+                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, parentField + key, data[key]);
                 }
 
                 throw new CustomError(errorCode.validate_error, errMsg);
@@ -215,14 +216,14 @@ export default class Schema {
                     if ((isString(data[key]) || Array.isArray(data[key])) && data[key].length < min) {
                         //如果长度大于0，又是必填项目，才要验证
                         if (data[key].length > 0 && this.schema[key]._required) {
-                            errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, parentField + key);
+                            errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, parentField + key, data[key]);
                             throw new CustomError(errorCode.validate_error, errMsg);
                         }
                     }
 
                     //数值对比大小
                     if (isNumber(data[key]) && data[key] < min) {
-                        errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, parentField + key);
+                        errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, parentField + key, data[key]);
 
                         throw new CustomError(errorCode.validate_error, errMsg);
                     }
@@ -236,14 +237,14 @@ export default class Schema {
 
                     //字符串与数组检查长度
                     if ((isString(data[key]) || Array.isArray(data[key])) && data[key].length > max) {
-                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, parentField + key);
+                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, parentField + key, data[key]);
 
                         throw new CustomError(errorCode.validate_error, errMsg);
                     }
 
                     //数值对比大小
                     if (isNumber(data[key]) && data[key] > max) {
-                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, parentField + key);
+                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, parentField + key, data[key]);
                         throw new CustomError(errorCode.validate_error, errMsg);
                     }
 
@@ -256,7 +257,7 @@ export default class Schema {
 
                     let isList = validList.every((val) => {
                         if (!val.validate(data[key])) {
-                            errMsg = this.getMsg(val.errorMsg, parentField + key);
+                            errMsg = this.getMsg(val.errorMsg, parentField + key, data[key]);
                             return false
                         }
                         return true;
@@ -290,7 +291,7 @@ export default class Schema {
 
         for (let v in this.schema) {
             if (this.schema[v]._required && !data[v] && !data[this.schema[v]._required.unlessField]) {
-                errMsg = this.getMsg(this.schema[v]._required.errorMsg, parentField + v);
+                errMsg = this.getMsg(this.schema[v]._required.errorMsg, parentField + v, data[v]);
                 throw new CustomError(errorCode.validate_error, errMsg);
                 break;
             }
@@ -330,7 +331,6 @@ export default class Schema {
 
         for (let v in this.schema) {
             if (this.schema[v]._required && !data[v]) {
-                console.log(v)
                 errMsg = this.getMsg(this.schema[v]._required.errorMsg, v);
                 throw new CustomError(errorCode.validate_error, errMsg);
                 break;
@@ -350,9 +350,9 @@ export default class Schema {
                 //TODO 检查类型是否正确
                 if (!this.schema[v]._validateType.validate(data[v])) {
                     if (v === '$default') {
-                        errMsg = this.getMsg(this.schema[v]._validateType.errorMsg, `"${data[v]}" `);
+                        errMsg = this.getMsg(this.schema[v]._validateType.errorMsg, `"${data[v]}" `, data[v]);
                     } else {
-                        errMsg = this.getMsg(this.schema[v]._validateType.errorMsg, v);
+                        errMsg = this.getMsg(this.schema[v]._validateType.errorMsg, v, data[v]);
                     }
 
                     throw new CustomError(errorCode.validate_error, errMsg);
@@ -395,14 +395,14 @@ export default class Schema {
                         if ((isString(data[v]) || Array.isArray(data[v])) && data[v].length < min) {
                             //如果长度大于0，又是必填项目，才要验证
                             if (data[v].length > 0 && this.schema[v]._required) {
-                                errMsg = this.getMsg(this.schema[v]._minlangth.errorMsg, v);
+                                errMsg = this.getMsg(this.schema[v]._minlangth.errorMsg, v, data[v]);
                                 throw new CustomError(errorCode.validate_error, errMsg);
                             }
                         }
 
                         //数值对比大小
                         if (isNumber(data[v]) && data[v] < min) {
-                            errMsg = this.getMsg(this.schema[v]._minlangth.errorMsg, v);
+                            errMsg = this.getMsg(this.schema[v]._minlangth.errorMsg, v, data[v]);
 
                             throw new CustomError(errorCode.validate_error, errMsg);
                         }
@@ -416,14 +416,14 @@ export default class Schema {
 
                         //字符串与数组检查长度
                         if ((isString(data[v]) || Array.isArray(data[v])) && data[v].length > max) {
-                            errMsg = this.getMsg(this.schema[v]._maxlangth.errorMsg, v);
+                            errMsg = this.getMsg(this.schema[v]._maxlangth.errorMsg, v, data[v]);
 
                             throw new CustomError(errorCode.validate_error, errMsg);
                         }
 
                         //数值对比大小
                         if (isNumber(data[v]) && data[v] > max) {
-                            errMsg = this.getMsg(this.schema[v]._maxlangth.errorMsg, v);
+                            errMsg = this.getMsg(this.schema[v]._maxlangth.errorMsg, v, data[v]);
                             throw new CustomError(errorCode.validate_error, errMsg);
                         }
 
@@ -436,7 +436,7 @@ export default class Schema {
 
                         let isList = validList.every((val) => {
                             if (!val.validate(data[v])) {
-                                errMsg = this.getMsg(val.errorMsg, v);
+                                errMsg = this.getMsg(val.errorMsg, v, data[v]);
                                 return false
                             }
                             return true;
@@ -483,10 +483,11 @@ export default class Schema {
     }
 
     //转化提示信息，替换%s为实际内容
-    getMsg(msg, string) {
+    getMsg(msg, string, value = '') {
 
         if (string && /%s/.test(msg)) {
-            return msg.replace('%s', string)
+            let d =  msg.replace('%s', string).replace('%v', value);
+            return d
         } else {
             return msg
         }
