@@ -172,7 +172,6 @@ export default class Schema {
                 if (key === '$default') {
                     errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${parentField}" `, data[key]);
                 } else {
-                    console.log('aaaa',parentField + key, data[key])
                     errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, parentField + key, data[key]);
                 }
 
