@@ -28,7 +28,7 @@ export default class ObjectValidate extends Validate {
 
 		this._validateType = {
 			validate: isObject,
-			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s必须是对象'
+			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s must be an object'
 		};
 	}
 

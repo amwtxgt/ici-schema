@@ -14,7 +14,7 @@ export default class EnumValidate extends Validate {
 
 		if(!Array.isArray(enums) || enums.length === 0 || !enums.some((v) => isString(v) || isNumber(v))) {
 			console.error('枚举类型参数必须是数组');
-			throw new CustomError(errorCode.validate_error,'Enum枚举类型参数必须是数组')
+			throw new CustomError(errorCode.validate_error,'The enumerated type parameter must be an array')
 		}
 		/*
 		* _validateType = null; //验证类型
@@ -34,7 +34,7 @@ export default class EnumValidate extends Validate {
 				}
 
 			},
-			errorMsg: errMsg && isString(errMsg) ? errMsg : `%s必须是[${this._enums}]中的一个`
+			errorMsg: errMsg && isString(errMsg) ? errMsg : `%s Must be a [${this._enums}]`
 		};
 	}
 }

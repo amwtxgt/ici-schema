@@ -18,7 +18,7 @@ export default class FunctionValidate extends Validate{
 		this._systemDefault = null //系统默认值
 		this._validateType = {
 			validate:(v)=>{return typeof v === "function"},
-			errorMsg:errMsg && isString(errMsg)?errMsg:'%s不是一个function'
+			errorMsg:errMsg && isString(errMsg)?errMsg:'%s is not a function'
 		};
 
 	}

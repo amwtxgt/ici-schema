@@ -79,7 +79,6 @@ export default class Schema {
     }
 
     constructor(data) {
-
         Object.defineProperty(this, 'schema', {
             value: data,
             enumerable: false,
@@ -159,7 +158,8 @@ export default class Schema {
     //@param {Object} data 原数据
     //@param {String} key 键
     //@param {Boolean} noFieldError 字段不存在报错
-    validateField(data, key, noFieldError) {
+    //@param {String} parentField 父级的字段
+    validateField(data, key, noFieldError, parentField = '') {
 
         //必须在数据架构存在
         let errMsg;
@@ -170,9 +170,9 @@ export default class Schema {
 
                 //数组里不是一个对象时，会有$default
                 if (key === '$default') {
-                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${data[key]}" `);
+                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${parentField}" `);
                 } else {
-                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, key);
+                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, parentField + key);
                 }
 
                 throw new CustomError(errorCode.validate_error, errMsg);
@@ -181,7 +181,7 @@ export default class Schema {
             if (this.schema[key].type === 'object') {
                 if (this.schema[key]._schema) {
                     //如果是ojbect对象，自带schema验证
-                    this.schema[key]._schema.validate(data[key], noFieldError);
+                    this.schema[key]._schema.validate(data[key], noFieldError, parentField + key + '.');
                 }
             } else if (this.schema[key].type === 'array') {
 
@@ -191,14 +191,15 @@ export default class Schema {
                     //1.数组元素是对象，直接调用数组的schema
                     //2.数组元素不是对象，把元素放到$default key再验证
                     let isDefault = this.schema[key]._schema.keys[0] === '$default';
-
+                    let index = 0;
                     for (let item of data[key]) {
 
                         if (isDefault) {
-                            this.schema[key]._schema.validate({$default: item}, noFieldError);
+                            this.schema[key]._schema.validate({$default: item}, noFieldError, `${parentField}${key}[${index}]`);
                         } else {
-                            this.schema[key]._schema.validate(item, noFieldError);
+                            this.schema[key]._schema.validate(item, noFieldError, `${parentField}${key}[${index}].`);
                         }
+                        index++
                     }
                 }
 
@@ -214,14 +215,14 @@ export default class Schema {
                     if ((isString(data[key]) || Array.isArray(data[key])) && data[key].length < min) {
                         //如果长度大于0，又是必填项目，才要验证
                         if (data[key].length > 0 && this.schema[key]._required) {
-                            errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, key);
+                            errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, parentField + key);
                             throw new CustomError(errorCode.validate_error, errMsg);
                         }
                     }
 
                     //数值对比大小
                     if (isNumber(data[key]) && data[key] < min) {
-                        errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, key);
+                        errMsg = this.getMsg(this.schema[key]._minlangth.errorMsg, parentField + key);
 
                         throw new CustomError(errorCode.validate_error, errMsg);
                     }
@@ -235,14 +236,14 @@ export default class Schema {
 
                     //字符串与数组检查长度
                     if ((isString(data[key]) || Array.isArray(data[key])) && data[key].length > max) {
-                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, key);
+                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, parentField + key);
 
                         throw new CustomError(errorCode.validate_error, errMsg);
                     }
 
                     //数值对比大小
                     if (isNumber(data[key]) && data[key] > max) {
-                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, key);
+                        errMsg = this.getMsg(this.schema[key]._maxlangth.errorMsg, parentField + key);
                         throw new CustomError(errorCode.validate_error, errMsg);
                     }
 
@@ -255,7 +256,7 @@ export default class Schema {
 
                     let isList = validList.every((val) => {
                         if (!val.validate(data[key])) {
-                            errMsg = this.getMsg(val.errorMsg, key);
+                            errMsg = this.getMsg(val.errorMsg, parentField + key);
                             return false
                         }
                         return true;
@@ -265,20 +266,23 @@ export default class Schema {
             }
         } else {
             if (noFieldError) {
-                throw new CustomError(errorCode.validate_error, `"${key}" field does not exist in the schema`)
+                throw new CustomError(errorCode.validate_error, `"${parentField + key}" field does not exist in the schema`)
             }
-            isDev() && console.warn(`${key} 字段没有在schema里，跳过验证`);
+            isDev() && console.warn(`${parentField + key} 字段没有在schema里，跳过验证`);
 
         }
         return true;
     }
 
     //验证数据
-    validate(data, noFieldError) {
+    //@param data
+    //@param {Boolean} noFieldError 字段不存在报错
+    //@param {String} parentField 父级的字段
+    validate(data, noFieldError, parentField = '') {
         if (!data) data = this;
 
         if (!isObject(data)) {
-            throw new CustomError(errorCode.validate_error, '验证数据失败，验证目标必须是对象')
+            throw new CustomError(errorCode.validate_error, '验证数据失败，验证目标必须是对象');
         }
 
         //TODO 检查必填项
@@ -286,8 +290,8 @@ export default class Schema {
 
         for (let v in this.schema) {
             if (this.schema[v]._required && !data[v] && !data[this.schema[v]._required.unlessField]) {
-                errMsg = this.getMsg(this.schema[v]._required.errorMsg, v);
-                throw new CustomError(errorCode.validate_error, errMsg)
+                errMsg = this.getMsg(this.schema[v]._required.errorMsg, parentField + v);
+                throw new CustomError(errorCode.validate_error, errMsg);
                 break;
             }
         }
@@ -296,7 +300,7 @@ export default class Schema {
 
             if (data[v] === null || data[v] === undefined) continue;
 
-            this.validateField(data, v, noFieldError)
+            this.validateField(data, v, noFieldError, parentField)
 
         }
 
@@ -328,7 +332,7 @@ export default class Schema {
             if (this.schema[v]._required && !data[v]) {
                 console.log(v)
                 errMsg = this.getMsg(this.schema[v]._required.errorMsg, v);
-                throw new CustomError(errorCode.validate_error, errMsg)
+                throw new CustomError(errorCode.validate_error, errMsg);
                 break;
             }
         }

@@ -25,7 +25,7 @@ export default class ArrayValidate extends Validate{
 
 		this._validateType = {
 			validate:Array.isArray,
-			errorMsg:errMsg && isString(errMsg)?errMsg:'%s必须是数组'
+			errorMsg:errMsg && isString(errMsg)?errMsg:'%s must be an array'
 		};
 	}
 }

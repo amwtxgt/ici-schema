@@ -19,7 +19,7 @@ export default class StringValidate extends Validate {
 		this._systemDefault = '' //系统默认值
 		this._validateType = {
 			validate: isString,
-			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s不是字符串'
+			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s is not a string'
 		};
 	}
 
@@ -28,23 +28,19 @@ export default class StringValidate extends Validate {
 		if(reg instanceof RegExp) {
 			this._validateList.push({
 				validate: (v) => reg.test(v),
-				errorMsg: errMsg && isString(errMsg) ? errMsg : '%s格式不合法',
+				errorMsg: errMsg && isString(errMsg) ? errMsg : '%s format is illegal',
 			});
 		}
 		else {
-			console.error(`${reg}不是正则表达式`)
+			console.error(`${reg} is not a regular expression`)
 		}
 		return this;
 	}
 	//限制固定长度
 	length(num,errMsg){
-		if(!isNumber(num)){
-			console.warn('参数“'+num+'”不是数值型，length()设置无效')
-			return this;
-		}
 		this._validateList.push({
 			validate: (v) => v.length===num,
-			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s长度必须是“'+num+'”位',
+			errorMsg: errMsg && isString(errMsg) ? errMsg : '%s length must be “'+num+'” digits',
 		});
 		return this;
 	}

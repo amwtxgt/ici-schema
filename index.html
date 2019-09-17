@@ -9,15 +9,18 @@
 <script>
     let a = new Schema({
         abc:Schema.number().integer(),
-        cde:Schema.array({abc:Schema.string()}),
+        cde:Schema.array({abc:Schema.object({hhh:Schema.number()})}),
+        bbb:Schema.array(Schema.string()),
         aaa:Schema.string().required(false,'cde')
+
     });
 
     let d = a.model(false,true);
     d.abc = 0
-    d.cde = [{}]
+    d.cde = [{abc:{hhh:'121'}}]
+    d.bbb =['sdf','sdf',555]
     d.validate()
-    console.log(d)
+    console.log(d.toJSON())
 </script>
 </body>
 </html>
