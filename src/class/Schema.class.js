@@ -149,7 +149,7 @@ export default class Schema {
                     data[i] = new Proxy(data[i], {
                         set(target, name, value) {
                             target[name] = value;
-                            console.log(d, i, 'awefwef');
+
                             if (name !== 'length' && d.schema[i] && d.schema[i]._schema) {
                                 let ob = target[name];
 
