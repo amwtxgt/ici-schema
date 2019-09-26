@@ -8,17 +8,39 @@
 <body>
 <script>
     let a = new Schema({
-        abc:Schema.number().integer(),
-        cde:Schema.array({abc:Schema.object({hhh:Schema.number()})}),
-        bbb:Schema.array(Schema.string()),
-        aaa:Schema.string().required(false,'cde')
+        abc: Schema.number().integer(),
+        cde: array({
+            abc: Schema.object({hhh: Schema.number()})
+        }).default([]),
+        //公司地址
+        addresses: array({
+            //地址名称
+            name:string(),
+            //是否是总部
+            headquarter: boolean().default(false),
+            /*国家与详细地址，必须有要有一项*/
+
+            //城市
+            city: string(),
+            //详细地址
+            address:string().default(''),
+            ha:array({d:number()})
+//		latitude: number().default(0),
+//		longitude: number().default(0),
+        }).default([]),
+        bbb: Schema.array(Schema.string()),
+//        aaa: Schema.string().required(false, 'cde')
 
     });
 
-    let d = a.model(false,true);
+    let d = a.model(false, true);
     d.abc = 1545
-    d.cde = [{abc:{hhh:121}}]
-    d.bbb =['sdf','sdf',555]
+    d.cde.push({abc: {hhh: 1231}})
+    d.cde.splice(0,1)
+    d.addresses.push({address: '123213',ha:[{d:1231}]})
+    d.addresses[0].address = '1234123213';
+    d.addresses[0].ha.push({d:12234321});
+//    d.bbb = ['sdf', 'sdf', 555]
     d.validate()
     console.log(d.toJSON())
 </script>

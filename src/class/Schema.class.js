@@ -125,10 +125,12 @@ export default class Schema {
         } else {
             origin = Object.create(this);
         }
+
         let data
         if (strictMode) {
             data = new Proxy(origin, {
                 set(target, name, value) {
+                    console.log(target, name, value)
                     target[name] = value
                     target.validateField(target, name, true)
                     return true;
@@ -143,6 +145,20 @@ export default class Schema {
             if (this.schema[i]._default !== undefined) {
                 let def = this.schema[i]._default;
                 data[i] = typeof def === 'object' ? JSON.parse(JSON.stringify(def)) : def
+                let d = this;
+                if (strictMode && data[i] instanceof Array) {
+                    data[i] = new Proxy(data[i], {
+                        set(target, name, value) {
+                            target[name] = value;
+                            console.log(d,i,'awefwef');
+                            if(name!=='length' && d.schema[i] && d.schema[i]._schema){
+                                d.schema[i]._schema.validate(target[name], true,`${i}[${name}].`)
+                            }
+                            return true;
+                        },
+                    });
+                }
+
             } else if (defaultData === true) {
                 data[i] = this.schema[i]._systemDefault;
             } else {
@@ -282,7 +298,8 @@ export default class Schema {
         if (!data) data = this;
 
         if (!isObject(data)) {
-            throw new CustomError(errorCode.validate_error, '验证数据失败，验证目标必须是对象');
+            if (!parentField) parentField = 'data';
+            throw new CustomError(errorCode.validate_error, parentField + ' must be objects');
         }
 
         //TODO 检查必填项
@@ -313,6 +330,13 @@ export default class Schema {
         if (idDeep) {
             return JSON.parse(JSON.stringify(this))
         } else {
+
+            Object.keys(this).forEach((key)=>{
+                if (this[key] instanceof Array) {
+                    this[key] = Object.assign([],this[key])
+                }
+            })
+
             return Object.assign({}, this)
         }
     }
@@ -485,7 +509,7 @@ export default class Schema {
     getMsg(msg, string, value = '') {
 
         if (string && /%s/.test(msg)) {
-            let d =  msg.replace('%s', string).replace('%v', value);
+            let d = msg.replace('%s', string).replace('%v', value);
             return d
         } else {
             return msg
