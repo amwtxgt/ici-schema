@@ -28,7 +28,7 @@
 //		latitude: number().default(0),
 //		longitude: number().default(0),
         }).default([]),
-        bbb: Schema.array(Schema.string()),
+        bbb: Schema.array(Schema.string()).default([]),
 //        aaa: Schema.string().required(false, 'cde')
 
     });
@@ -40,6 +40,7 @@
     d.addresses.push({address: '123213',ha:[{d:1231}]})
     d.addresses[0].address = '1234123213';
     d.addresses[0].ha.push({d:12234321});
+    d.bbb.push(235442)
 //    d.bbb = ['sdf', 'sdf', 555]
     d.validate()
     console.log(d.toJSON())

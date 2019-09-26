@@ -130,9 +130,8 @@ export default class Schema {
         if (strictMode) {
             data = new Proxy(origin, {
                 set(target, name, value) {
-                    console.log(target, name, value)
-                    target[name] = value
-                    target.validateField(target, name, true)
+                    target[name] = value;
+                    target.validateField(target, name, true);
                     return true;
                 },
             });
@@ -150,9 +149,15 @@ export default class Schema {
                     data[i] = new Proxy(data[i], {
                         set(target, name, value) {
                             target[name] = value;
-                            console.log(d,i,'awefwef');
-                            if(name!=='length' && d.schema[i] && d.schema[i]._schema){
-                                d.schema[i]._schema.validate(target[name], true,`${i}[${name}].`)
+                            console.log(d, i, 'awefwef');
+                            if (name !== 'length' && d.schema[i] && d.schema[i]._schema) {
+                                let ob = target[name];
+
+                                if (typeof ob !== "object") {
+                                    ob = {$default: target[name]}
+                                }
+
+                                d.schema[i]._schema.validate(ob, true, `${i}[${name}].`)
                             }
                             return true;
                         },
@@ -186,7 +191,8 @@ export default class Schema {
 
                 //数组里不是一个对象时，会有$default
                 if (key === '$default') {
-                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${parentField}" `, data[key]);
+                    errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, `"${this._removeLastSpot(parentField)}" `,
+                        data[key]);
                 } else {
                     errMsg = this.getMsg(this.schema[key]._validateType.errorMsg, parentField + key, data[key]);
                 }
@@ -290,16 +296,25 @@ export default class Schema {
         return true;
     }
 
+    //去除最后一位点
+    _removeLastSpot(str) {
+        if (str[str.length - 1] === '.') {
+            str = str.substr(0,str.length - 1)
+        }
+        return str;
+    }
+
     //验证数据
     //@param data
     //@param {Boolean} noFieldError 字段不存在报错
-    //@param {String} parentField 父级的字段
+    //@param {String} parentField 父级的人中必须是对象字段
     validate(data, noFieldError, parentField = '') {
         if (!data) data = this;
 
         if (!isObject(data)) {
             if (!parentField) parentField = 'data';
-            throw new CustomError(errorCode.validate_error, parentField + ' must be objects');
+
+            throw new CustomError(errorCode.validate_error, this._removeLastSpot(parentField) + ' must be objects');
         }
 
         //TODO 检查必填项
@@ -307,7 +322,7 @@ export default class Schema {
 
         for (let v in this.schema) {
             if (this.schema[v]._required && !data[v] && !data[this.schema[v]._required.unlessField]) {
-                errMsg = this.getMsg(this.schema[v]._required.errorMsg, parentField + v, data[v]);
+                errMsg = this.getMsg(this.schema[v]._required.errorMsg, this._removeLastSpot(parentField) + v, data[v]);
                 throw new CustomError(errorCode.validate_error, errMsg);
                 break;
             }
@@ -331,9 +346,9 @@ export default class Schema {
             return JSON.parse(JSON.stringify(this))
         } else {
 
-            Object.keys(this).forEach((key)=>{
+            Object.keys(this).forEach((key) => {
                 if (this[key] instanceof Array) {
-                    this[key] = Object.assign([],this[key])
+                    this[key] = Object.assign([], this[key])
                 }
             })
 
