@@ -12,7 +12,7 @@ export default class EnumValidate extends Validate {
 
         super();
 
-        if (!Array.isArray(enums) || enums.length === 0 || !enums.some((v) => isString(v) || isNumber(v))) {
+        if (!Array.isArray(enums) || enums.length === 0) {
             console.error('枚举类型参数必须是数组');
             throw new CustomError(errorCode.validate_error,
                 'The enumerated type parameter must be an array, Current value: ' + enums.toString())
