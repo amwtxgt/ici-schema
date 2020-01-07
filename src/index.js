@@ -1,7 +1,7 @@
 import Schema from './class/Schema.class'
 
-if (typeof window !== 'undefined') {
-    window.Schema = Schema;
+if (typeof globalThis !== 'undefined') {
+    globalThis.Schema = Schema;
 }
 
 
