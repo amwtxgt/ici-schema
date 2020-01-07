@@ -7,6 +7,7 @@ module.exports = {
   output: {
     libraryTarget: 'umd',
     umdNamedDefine: true,
+    globalObject:'this',
     path: path.resolve(__dirname, './lib'),
     publicPath: '/lib/',
     filename: 'Schema.class.js'

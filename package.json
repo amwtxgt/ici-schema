@@ -1,7 +1,7 @@
 {
   "name": "ici-schema",
   "description": "JSON Schema validation",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "author": "huangmin",
   "license": "ISC",
   "private": false,

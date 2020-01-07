@@ -1,10 +1,5 @@
 import Schema from './class/Schema.class'
 
-if (typeof globalThis !== 'undefined') {
-    globalThis.Schema = Schema;
-}
-
-
 export let number = Schema.number;
 export let string = Schema.string;
 export let object = Schema.object;
